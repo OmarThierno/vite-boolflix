@@ -1,16 +1,51 @@
 <script>
+import axios from 'axios';
+import { store } from './store'
+import AppHeader from './components/AppHeader.vue'
+import AppMain from './components/AppMain.vue'
+
 export default {
+  components: {
+    AppHeader,
+    AppMain,
+  },
   data() {
     return {
+      store,
+    }
+  }, created() {
+    this.getCallAPI();
 
+  },
+  methods: {
+    getCallAPI() {
+      const params = {
+        api_key: this.store.api_key,
+        query: this.store.searchQuery,
+      }
+      axios.get('https://api.themoviedb.org/3/search/movie', {
+        params
+      }).then((resp) => {
+        console.log(resp.data.results);
+        this.store.movieArr = resp.data.results;
+      })
+    },
+    getQualcosa() {
+      console.log('qui');
     }
   }
 }
 </script>
 
 <template>
- <h1>hello</h1>
+  <!-- <header>
+    <input type="text" placeholder="cerca film" v-model="store.searchQuery">
+
+    <button @click="getCallAPI">cerca</button>
+  </header> -->
+  <AppHeader @searchQuery="getCallAPI" />
+
+  <AppMain />
 </template>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>
