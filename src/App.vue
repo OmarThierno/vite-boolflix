@@ -22,27 +22,27 @@ export default {
       const params = {
         api_key: this.store.api_key,
         query: this.store.searchQuery,
-      }
+      };
+
       axios.get('https://api.themoviedb.org/3/search/movie', {
         params
       }).then((resp) => {
-        console.log(resp.data.results);
+        // console.log(resp.data.results);
         this.store.movieArr = resp.data.results;
       })
+
+      axios.get('https://api.themoviedb.org/3/search/tv', {
+        params
+      }).then((resp) => {
+        // console.log(resp.data.results);
+        this.store.seriesTvArr = resp.data.results;
+      })
     },
-    getQualcosa() {
-      console.log('qui');
-    }
   }
 }
 </script>
 
 <template>
-  <!-- <header>
-    <input type="text" placeholder="cerca film" v-model="store.searchQuery">
-
-    <button @click="getCallAPI">cerca</button>
-  </header> -->
   <AppHeader @searchQuery="getCallAPI" />
 
   <AppMain />
