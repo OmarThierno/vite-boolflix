@@ -1,18 +1,17 @@
 <script>
 import { store } from '../store'
-import AppCard from './AppCard.vue'
-import AppHero from './AppHero.vue'
 
 export default {
-  components: {
-    AppCard,
-    AppHero,
+  props: {
+    curArr: Array,
+    keyTitle: String,
+    keyLanguage: String,
+    keyPath: String,
+    keyvVote: Number,
   },
   data() {
     return {
       store,
-      movieKey: 'original_title',
-      serieKey: 'name',
       flagArr: [
         {
           language: 'en',
@@ -92,8 +91,6 @@ export default {
         },
       ]
     }
-  }, created() {
-
   },
   methods: {
     getImgPoster(str) {
@@ -113,66 +110,31 @@ export default {
       const result = Math.round(operazione)
       return result
     },
-  },
-
+  }
 }
 </script>
 
 <template>
-  <main>
+  <div v-for="film in curArr" class="col">
 
-    <AppHero />
+    <div class="card card-front h-100">
+      <img :src="getImgPoster(film.poster_path)" class="card-img" alt="...">
+    </div>
 
-    <div class="container">
-      <div>Movie</div>
-
-      <div class="row row-cols-2 row-cols-sm-4 row-cols-md-6 row-cols-lg-9 g-1">
-        <!-- <div v-for="film in store.movieArr" class="col">
-
-          <div class="card card-front">
-            <img :src="getImgPoster(film.poster_path)" class="card-img" alt="...">
-          </div>
-
-          <div class="card card-back">
-            <div>{{ film.original_title }}</div>
-            <div>{{ film.original_language }}</div>
-            <div>
-              <img class="ms_flag" :src="getArr(film.original_language)" alt="">
-            </div>
-            <div>{{ converterAverage(film.vote_average) }}</div>
-            <div>
-              <i v-for="icon in converterAverage(film.vote_average)" class="fa-solid fa-star"></i>
-              <i class="fa-regular fa-star"></i>
-            </div>
-          </div>
-        </div> -->
-        <AppCard :curArr="store.movieArr" :keyTitle="movieKey" />
+    <div class="card card-back h-100">
+      <div>{{ film.original_title }}</div>
+      <div>{{ film.original_language }}</div>
+      <div>
+        <img class="ms_flag" :src="getArr(film.original_language)" alt="">
       </div>
-
-      <div>Serie TV</div>
-
-      <div class="row row-cols-2 row-cols-sm-4 row-cols-md-6 row-cols-lg-9 g-1">
-        <div v-for="serieTv in store.seriesTvArr" class="col">
-          <div class="card card-front h-100">
-            <img :src="getImgPoster(serieTv.poster_path)" class="card-img" alt="...">
-          </div>
-
-          <div class="card card-back h-100">
-            <div>{{ serieTv.name }}</div>
-            <div>{{ serieTv.original_language }}</div>
-            <div>
-              <img class="ms_flag" :src="getArr(serieTv.original_language)" alt="">
-            </div>
-            <div>{{ converterAverage(serieTv.vote_average) }}</div>
-            <div>
-              <i v-for="icon in converterAverage(serieTv.vote_average)" class="fa-solid fa-star"></i>
-            </div>
-          </div>
-
-        </div>
+      <div>{{ converterAverage(film.vote_average) }}</div>
+      <div>
+        <i v-for="icon in converterAverage(film.vote_average)" class="fa-solid fa-star"></i>
+        <i class="fa-regular fa-star"></i>
       </div>
     </div>
-  </main>
+  </div>
+
 </template>
 
 <style lang="scss" scoped>
