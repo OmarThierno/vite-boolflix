@@ -1,17 +1,11 @@
 <script>
-import { store } from '../store'
 
 export default {
   props: {
-    curArr: Array,
-    keyTitle: String,
-    keyLanguage: String,
-    keyPath: String,
-    keyvVote: Number,
+    cardObj: Object,
   },
   data() {
     return {
-      store,
       flagArr: [
         {
           language: 'en',
@@ -89,7 +83,12 @@ export default {
           language: 'ar',
           path: 'https://i.pinimg.com/474x/ed/53/0c/ed530c3a478f5389b009e91446f89dca.jpg',
         },
-      ]
+      ],
+    }
+  },
+  computed: {
+    cardTitle() {
+      return !!this.cardObj.title ? this.cardObj.title : this.cardObj.name;
     }
   },
   methods: {
@@ -110,29 +109,34 @@ export default {
       const result = Math.round(operazione)
       return result
     },
+    starNonColor(vote) {
+      const results = 5 - this.converterAverage(vote)
+      return results
+    }
   }
 }
 </script>
 
 <template>
-  <div v-for="film in curArr" class="col">
 
-    <div class="card card-front h-100">
-      <img :src="getImgPoster(film.poster_path)" class="card-img" alt="...">
-    </div>
+  <div class="card card-front h-100">
+    <img :src="getImgPoster(cardObj.poster_path)" class="card-img" alt="...">
+  </div>
 
-    <div class="card card-back h-100">
-      <div>{{ film.original_title }}</div>
-      <div>{{ film.original_language }}</div>
+  <div class="card card-back text-center h-100">
+    <div class="ms_title">{{ cardTitle }}</div>
+    <div class="ms_flag-container d-flex justify-content-center gap-2 my-3">
+      <div>{{ cardObj.original_language }}</div>
       <div>
-        <img class="ms_flag" :src="getArr(film.original_language)" alt="">
-      </div>
-      <div>{{ converterAverage(film.vote_average) }}</div>
-      <div>
-        <i v-for="icon in converterAverage(film.vote_average)" class="fa-solid fa-star"></i>
-        <i class="fa-regular fa-star"></i>
+        <img class="ms_flag" :src="getArr(cardObj.original_language)" alt="">
       </div>
     </div>
+    <!-- <div>{{ converterAverage(cardObj.vote_average) }}</div> -->
+    <div>
+      <i v-for="icon in converterAverage(cardObj.vote_average)" class="fa-solid fa-star"></i>
+      <i v-for="iconNotCol in starNonColor(cardObj.vote_average)" class="fa-regular fa-star"></i>
+    </div>
+    <button class="btn btn-light my-3">Cerca Cast</button>
   </div>
 
 </template>
@@ -157,6 +161,10 @@ export default {
 
   &:hover .card-back {
     display: block;
+  }
+
+  .ms_title {
+    font-size: 0.8rem;
   }
 
 }

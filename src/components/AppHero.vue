@@ -13,13 +13,16 @@ export default {
   },
   methods: {
     getHeroPoster() {
-      let counter = 0;
-      if (this.store.movieArr[0].backdrop_path !== null) {
-        this.heroPath = 'https://image.tmdb.org/t/p/w342' + this.store.movieArr[counter].backdrop_path
-        console.log(this.store.movieArr[0]);
-      } else {
-        counter++
-        this.heroPath = 'https://image.tmdb.org/t/p/w342' + this.store.movieArr[counter].backdrop_path
+      if (store.movieArr.length !== null) {
+        let counter = 0;
+        let heroPath = '';
+        if (this.store.movieArr[0].backdrop_path !== null) {
+          return heroPath = 'https://image.tmdb.org/t/p/w342' + this.store.movieArr[counter].backdrop_path
+          console.log(this.store.movieArr[0]);
+        } else {
+          counter++
+          return heroPath = 'https://image.tmdb.org/t/p/w342' + this.store.movieArr[counter].backdrop_path
+        }
       }
     },
   }
@@ -27,10 +30,14 @@ export default {
 </script>
 
 <template>
-  <!-- <div class="hero">
-    <img :src="heroPath" alt="">
-    <button @click="getHeroPoster()"></button>
-  </div> -->
+  <div class="hero" v-if="store.movieArr.length !== 0" :style="{ 'background-image': 'url(' + getHeroPoster() + ')' }">
+    <img class="img-fluid" :src="getHeroPoster()" alt="">
+  </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.hero {
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+</style>

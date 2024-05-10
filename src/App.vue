@@ -19,6 +19,7 @@ export default {
   },
   methods: {
     getCallAPI() {
+      this.store.isLoading = true;
       const params = {
         api_key: this.store.api_key,
         query: this.store.searchQuery,
@@ -29,6 +30,7 @@ export default {
       }).then((resp) => {
         // console.log(resp.data.results);
         this.store.movieArr = resp.data.results;
+        this.store.isLoading = false;
       })
 
       axios.get('https://api.themoviedb.org/3/search/tv', {
@@ -36,6 +38,7 @@ export default {
       }).then((resp) => {
         // console.log(resp.data.results);
         this.store.seriesTvArr = resp.data.results;
+        this.store.isLoading = false;
       })
     },
   }
