@@ -1,11 +1,18 @@
 <script>
+import axios from 'axios';
+import AppSearchCast from "./AppSearchCast.vue";
+import { store } from '../store'
 
 export default {
+  components: {
+    AppSearchCast,
+  },
   props: {
     cardObj: Object,
   },
   data() {
     return {
+      store,
       flagArr: [
         {
           language: 'en',
@@ -112,6 +119,28 @@ export default {
     starNonColor(vote) {
       const results = 5 - this.converterAverage(vote)
       return results
+    },
+    getCastGen(idToSearch) {
+      console.log(idToSearch);
+      const params = {
+        api_key: this.store.api_key,
+      };
+
+      const castReq = axios.get(`https://api.themoviedb.org/3/movie/${idToSearch}/credits`, {
+        params
+      });
+
+      const genrReq = axios.get(`https://api.themoviedb.org/3/movie/${idToSearch}`, {
+        params
+      });
+
+      axios.all([castReq, genrReq]).then((resp) => {
+        console.log(resp);
+        this.store.castArr = resp[0].data.cast;
+        this.store.genrArr = resp[1].data.genres;
+      })
+
+
     }
   }
 }
@@ -136,7 +165,9 @@ export default {
       <i v-for="icon in converterAverage(cardObj.vote_average)" class="fa-solid fa-star"></i>
       <i v-for="iconNotCol in starNonColor(cardObj.vote_average)" class="fa-regular fa-star"></i>
     </div>
-    <button class="btn btn-light my-3">Cerca Cast</button>
+
+    <AppSearchCast @giveMeId="getCastGen(cardObj.id)" />
+
   </div>
 
 </template>

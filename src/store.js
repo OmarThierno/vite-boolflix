@@ -5,5 +5,7 @@ export const store = reactive ({
     searchQuery: '',
     movieArr: [],
     seriesTvArr: [],
+    castArr: [],
+    genrArr: [],
     isLoading: false,
 })
