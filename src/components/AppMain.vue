@@ -2,11 +2,13 @@
 import { store } from '../store'
 import AppCard from './AppCard.vue'
 import AppHero from './AppHero.vue'
+import AppFlipType from "./AppFlipType.vue";
 
 export default {
   components: {
     AppCard,
     AppHero,
+    AppFlipType,
   },
   data() {
     return {
@@ -41,8 +43,10 @@ export default {
 
     <AppHero />
 
+    <AppFlipType />
+
     <div class="container">
-      <div>Movie</div>
+      <h2 v-if="store.movieArr.length !== 0" class="my-3">Movie</h2>
 
       <div class="row row-cols-2 row-cols-sm-4 row-cols-md-6 row-cols-lg-9 g-1">
 
@@ -51,9 +55,9 @@ export default {
         </div>
       </div>
 
-      <div>Serie TV</div>
+      <h2 v-if="store.seriesTvArr.length !== 0" class="my-3">Serie TV</h2>
 
-      <div class="row row-cols-2 row-cols-sm-4 row-cols-md-6 row-cols-lg-9 g-1">
+      <div class="row row-cols-2 row-cols-sm-4 row-cols-md-6 row-cols-lg-9 g-1 mb-3">
         <div v-for="serie in store.seriesTvArr" class="col">
           <AppCard :cardObj="serie" />
         </div>
@@ -62,4 +66,8 @@ export default {
   </main>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+h2 {
+  color: white;
+}
+</style>

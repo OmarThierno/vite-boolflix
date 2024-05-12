@@ -4,6 +4,7 @@ import { store } from './store'
 import AppHeader from './components/AppHeader.vue'
 import AppMain from './components/AppMain.vue'
 
+
 export default {
   components: {
     AppHeader,
@@ -14,12 +15,29 @@ export default {
       store,
     }
   }, created() {
-    this.getCallAPI();
-
+    this.getRandMovTv()
   },
   methods: {
-    getCallAPI() {
-      this.store.isLoading = true;
+    getRandMovTv() {
+      const params = {
+        api_key: this.store.api_key,
+      };
+
+      const movReq = axios.get('https://api.themoviedb.org/3/discover/movie', { params });
+
+      const serReq = axios.get('https://api.themoviedb.org/3/discover/tv', { params });
+
+      axios.all([movReq, serReq]).then((resp) => {
+        this.store.movieArr = resp[0].data.results;
+        this.store.seriesTvArr = resp[1].data.results;
+      })
+    },
+    getData() {
+      this.getMovies();
+      this.getSerie()
+      this.store.searchQuery = '';
+    },
+    getMovies() {
       const params = {
         api_key: this.store.api_key,
         query: this.store.searchQuery,
@@ -28,25 +46,31 @@ export default {
       axios.get('https://api.themoviedb.org/3/search/movie', {
         params
       }).then((resp) => {
-        // console.log(resp.data.results);
         this.store.movieArr = resp.data.results;
-        this.store.isLoading = false;
       })
+
+    },
+    getSerie() {
+      const params = {
+        api_key: this.store.api_key,
+        query: this.store.searchQuery,
+      };
 
       axios.get('https://api.themoviedb.org/3/search/tv', {
         params
       }).then((resp) => {
-        // console.log(resp.data.results);
         this.store.seriesTvArr = resp.data.results;
-        this.store.isLoading = false;
       })
+    },
+    getCallAPI() {
+
     },
   }
 }
 </script>
 
 <template>
-  <AppHeader @searchQuery="getCallAPI" />
+  <AppHeader @searchQuery="getData" @backHome="getRandMovTv" />
 
   <AppMain />
 </template>

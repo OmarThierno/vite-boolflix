@@ -12,6 +12,8 @@ export default {
   },
   data() {
     return {
+      flagAlternative: 'https://i.pinimg.com/474x/7f/bc/2d/7fbc2d8a6a1283a2ef8bae0586310fc2.jpg',
+      posterAlternative: 'https://i.pinimg.com/474x/5f/ff/a4/5fffa412ec664d316f59e314910a71d5.jpg',
       store,
       flagArr: [
         {
@@ -102,12 +104,18 @@ export default {
     getImgPoster(str) {
       return 'https://image.tmdb.org/t/p/w342' + str
     },
-    getArr(nation) {
+    getFlagPath(nation) {
+      let flag = true;
       for (let i = 0; i < this.flagArr.length; i++) {
         const curFlagArr = this.flagArr[i]
-        if (nation === curFlagArr.language) {
+        if (nation === curFlagArr.language && flag) {
+          flag = false
           return curFlagArr.path
         }
+      }
+
+      if (flag) {
+        return this.flagAlternative
       }
     },
     converterAverage(average) {
@@ -120,36 +128,51 @@ export default {
       const results = 5 - this.converterAverage(vote)
       return results
     },
-    getCastGen(idToSearch) {
-      console.log(idToSearch);
+    getCastGen(idToSearch, movieOrSerie) {
       const params = {
         api_key: this.store.api_key,
       };
 
-      const castReq = axios.get(`https://api.themoviedb.org/3/movie/${idToSearch}/credits`, {
-        params
-      });
+      if (movieOrSerie === this.cardObj.title) {
+        const castReq = axios.get(`https://api.themoviedb.org/3/movie/${idToSearch}/credits`, {
+          params
+        });
 
-      const genrReq = axios.get(`https://api.themoviedb.org/3/movie/${idToSearch}`, {
-        params
-      });
+        const genrReq = axios.get(`https://api.themoviedb.org/3/movie/${idToSearch}`, {
+          params
+        });
 
-      axios.all([castReq, genrReq]).then((resp) => {
-        console.log(resp);
-        this.store.castArr = resp[0].data.cast;
-        this.store.genrArr = resp[1].data.genres;
-      })
+        axios.all([castReq, genrReq]).then((resp) => {
+          this.store.castArr = resp[0].data.cast;
+          this.store.genrArr = resp[1].data.genres;
+        })
+      } else {
+        const castReq = axios.get(`https://api.themoviedb.org/3/tv/${idToSearch}/credits`, {
+          params
+        });
+
+        const genrReq = axios.get(`https://api.themoviedb.org/3/tv/${idToSearch}`, {
+          params
+        });
+
+        axios.all([castReq, genrReq]).then((resp) => {
+          this.store.castArr = resp[0].data.cast;
+          this.store.genrArr = resp[1].data.genres;
+        })
+      }
+
 
 
     }
   }
 }
 </script>
-
+<!-- TEMPLATE  -->
 <template>
 
   <div class="card card-front h-100">
-    <img :src="getImgPoster(cardObj.poster_path)" class="card-img" alt="...">
+    <img v-if="cardObj.poster_path !== null" :src="getImgPoster(cardObj.poster_path)" class="card-img" alt="...">
+    <img v-else :src="posterAlternative" alt="">
   </div>
 
   <div class="card card-back text-center h-100">
@@ -157,7 +180,7 @@ export default {
     <div class="ms_flag-container d-flex justify-content-center gap-2 my-3">
       <div>{{ cardObj.original_language }}</div>
       <div>
-        <img class="ms_flag" :src="getArr(cardObj.original_language)" alt="">
+        <img class="ms_flag" :src="getFlagPath(cardObj.original_language)" alt="">
       </div>
     </div>
     <!-- <div>{{ converterAverage(cardObj.vote_average) }}</div> -->
@@ -166,11 +189,13 @@ export default {
       <i v-for="iconNotCol in starNonColor(cardObj.vote_average)" class="fa-regular fa-star"></i>
     </div>
 
-    <AppSearchCast @giveMeId="getCastGen(cardObj.id)" />
+    <AppSearchCast @giveMeId="getCastGen(cardObj.id, cardTitle)" />
 
   </div>
 
 </template>
+<!-- /TEMPLATE  -->
+
 
 <style lang="scss" scoped>
 .col {
