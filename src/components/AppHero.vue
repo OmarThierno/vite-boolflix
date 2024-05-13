@@ -32,7 +32,7 @@ export default {
 </script>
 
 <template>
-  <div v-show="store.searchQuery === ''">
+  <div v-show="store.searchQuery === '' && !store.isWishlist">
     <div class="hero d-flex" v-if="store.movieArr.length !== 0">
       <img class="img-fluid" :src="getHeroPoster()" alt="">
       <div class="flex-grow-1 px-3 py-3" v-if="store.movieArr.length !== 0"

@@ -1,15 +1,18 @@
 <script>
+import { store } from '../store.js'
+
 export default {
   data() {
     return {
-      genre: ['']
+      genre: [''],
+      store,
     }
   }
 }
 </script>
 
 <template>
-  <select class="form-select text-center" aria-label="Select the genre">
+  <select v-if="!store.isWishlist" class="form-select text-center" aria-label="Select the genre">
     <option selected>Select the genre</option>
     <option value="1">One</option>
     <option value="2">Two</option>

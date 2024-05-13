@@ -23,6 +23,9 @@ export default {
             <li @click="$emit('backHome')" class="nav-item">
               <a class="nav-link active" aria-current="page" href="#">Home</a>
             </li>
+            <li @click="$emit('wishlist')" class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Wishlist</a>
+            </li>
           </ul>
           <form class="d-flex" role="search" @submit.prevent>
             <input v-model="store.searchQuery" class="form-control me-2" type="search" placeholder="cerca film"

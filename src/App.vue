@@ -16,9 +16,19 @@ export default {
     }
   }, created() {
     this.getRandMovTv()
+
+    const localWishlist = localStorage.getItem('wishlist')
+
+    if (localWishlist !== null) {
+      this.store.wishlist = JSON.parse(localWishlist)
+    } else {
+      this.store.wishlist = []
+    }
   },
   methods: {
     getRandMovTv() {
+      this.store.isWishlist = false;
+
       const params = {
         api_key: this.store.api_key,
       };
@@ -62,17 +72,18 @@ export default {
         this.store.seriesTvArr = resp.data.results;
       })
     },
-    getCallAPI() {
-
+    getWishlist() {
+      console.log('qui');
+      this.store.isWishlist = true
     },
   }
 }
 </script>
 
 <template>
-  <AppHeader @searchQuery="getData" @backHome="getRandMovTv" />
+  <AppHeader @searchQuery="getData" @backHome="getRandMovTv" @wishlist="getWishlist" />
 
-  <AppMain />
+  <AppMain @returnHome="getRandMovTv" />
 </template>
 
 <style lang="scss"></style>

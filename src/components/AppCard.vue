@@ -1,11 +1,13 @@
 <script>
 import axios from 'axios';
 import AppSearchCast from "./AppSearchCast.vue";
+import Wishlist from "./Wishlist.vue";
 import { store } from '../store'
 
 export default {
   components: {
     AppSearchCast,
+    Wishlist,
   },
   props: {
     cardObj: Object,
@@ -170,7 +172,7 @@ export default {
 <!-- TEMPLATE  -->
 <template>
 
-  <div class="card card-front h-100">
+  <!-- <div class="card card-front h-100">
     <img v-if="cardObj.poster_path !== null" :src="getImgPoster(cardObj.poster_path)" class="card-img" alt="...">
     <img v-else :src="posterAlternative" alt="">
   </div>
@@ -183,7 +185,7 @@ export default {
         <img class="ms_flag" :src="getFlagPath(cardObj.original_language)" alt="">
       </div>
     </div>
-    <!-- <div>{{ converterAverage(cardObj.vote_average) }}</div> -->
+    <div>{{ converterAverage(cardObj.vote_average) }}</div>
     <div>
       <i v-for="icon in converterAverage(cardObj.vote_average)" class="fa-solid fa-star"></i>
       <i v-for="iconNotCol in starNonColor(cardObj.vote_average)" class="fa-regular fa-star"></i>
@@ -191,41 +193,109 @@ export default {
 
     <AppSearchCast @giveMeId="getCastGen(cardObj.id, cardTitle)" />
 
-  </div>
+  </div> -->
 
+  <!-- flip/ -->
+  <div class="ms_flip-card">
+    <div class="ms_flip-card-inner">
+      <div class="ms_flip-card-front">
+        <img v-if="cardObj.poster_path !== null" :src="getImgPoster(cardObj.poster_path)" class="card-img img-fluid"
+          alt="...">
+        <img v-else :src="posterAlternative" alt="" class="card-img img-fluid">
+      </div>
+      <div class="ms_flip-card-back">
+        <!-- Wishlist  -->
+        <Wishlist :cardToSave="cardObj" />
+        <!-- /Wishlist  -->
+
+        <h6>{{ cardTitle }}</h6>
+        <div class="ms_flag-container d-flex justify-content-center gap-2 my-3">
+          <div>{{ cardObj.original_language }}</div>
+          <div>
+            <img class="ms_flag" :src="getFlagPath(cardObj.original_language)" alt="">
+          </div>
+        </div>
+        <div>{{ converterAverage(cardObj.vote_average) }}</div>
+        <div>
+          <i v-for="icon in converterAverage(cardObj.vote_average)" class="fa-solid fa-star"></i>
+          <i v-for="iconNotCol in starNonColor(cardObj.vote_average)" class="fa-regular fa-star"></i>
+        </div>
+
+        <!-- AppSearchCast -->
+        <AppSearchCast @giveMeId="getCastGen(cardObj.id, cardTitle)" />
+        <!-- /AppSearchCast -->
+      </div>
+    </div>
+  </div>
 </template>
 <!-- /TEMPLATE  -->
 
 
 <style lang="scss" scoped>
-.col {
+// .col {
 
-  .card-front,
-  .card-back {
-    background-color: black;
-    color: white;
-    position: relative;
+//   .card-front,
+//   .card-back {
+//     background-color: black;
+//     color: white;
+//     position: relative;
+//   }
+
+//   .card-back {
+//     display: none;
+//   }
+
+//   &:hover .card-front {
+//     display: none;
+//   }
+
+//   &:hover .card-back {
+//     display: block;
+//   }
+
+//   .ms_title {
+//     font-size: 0.8rem;
+//   }
+
+// }
+
+.ms_flip-card {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2/3;
+
+  .ms_flip-card-inner {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transform-style: preserve-3d;
+    transition: all 0.5s ease;
+
+    &:hover {
+      transform: rotateY(180deg);
+    }
+
+    .ms_flip-card-front {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+    }
+
+    .ms_flip-card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      background-color: black;
+      color: white;
+      transform: rotateY(180deg);
+
+      .ms_flag {
+        width: 20px;
+      }
+    }
   }
-
-  .card-back {
-    display: none;
-  }
-
-  &:hover .card-front {
-    display: none;
-  }
-
-  &:hover .card-back {
-    display: block;
-  }
-
-  .ms_title {
-    font-size: 0.8rem;
-  }
-
-}
-
-.ms_flag {
-  width: 20px;
 }
 </style>
