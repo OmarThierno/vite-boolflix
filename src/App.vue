@@ -72,16 +72,14 @@ export default {
         this.store.seriesTvArr = resp.data.results;
       })
     },
-    getWishlist() {
-      console.log('qui');
-      this.store.isWishlist = true
-    },
   }
 }
 </script>
 
 <template>
-  <AppHeader @searchQuery="getData" @backHome="getRandMovTv" @wishlist="getWishlist" />
+  <AppHeader @searchQuery="getData" />
+
+  <router-view></router-view>
 
   <AppMain @returnHome="getRandMovTv" />
 </template>

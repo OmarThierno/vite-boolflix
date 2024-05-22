@@ -4,6 +4,24 @@ export default {
   data() {
     return {
       store,
+      menu: [
+        {
+          title: 'Home',
+          routerName: 'home'
+        },
+        {
+          title: 'Film',
+          routerName: 'film'
+        },
+        {
+          title: 'Serie Tv',
+          routerName: 'serieTv'
+        },
+        {
+          title: 'Wishlist',
+          routerName: 'wishlist'
+        },
+      ]
     }
   },
 }
@@ -20,11 +38,21 @@ export default {
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li @click="$emit('backHome')" class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
+            <li class="nav-item">
+              <router-link :to="{ name: menu[0].routerName }" class="nav-link" aria-current="page"
+                href="#">Home</router-link>
             </li>
-            <li @click="$emit('wishlist')" class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Wishlist</a>
+            <li class="nav-item">
+              <router-link :to="{ name: menu[1].routerName }" class="nav-link" aria-current="page"
+                href="#">Film</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link :to="{ name: menu[2].routerName }" class="nav-link" aria-current="page" href="#">Serie
+                Tv</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link :to="{ name: menu[3].routerName }" class="nav-link" aria-current="page"
+                href="#">Wishlist</router-link>
             </li>
           </ul>
           <form class="d-flex" role="search" @submit.prevent>
@@ -38,4 +66,8 @@ export default {
   </header>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.router-link-active {
+  color: white;
+}
+</style>
